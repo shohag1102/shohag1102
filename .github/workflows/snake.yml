@@ -1,42 +1,56 @@
 name: GitHub Snake Game
 
+# Run workflow each day at midnight (UTC) + on manual triggers and push on main
 on:
-  # Schedule the workflow to run daily at midnight UTC
   schedule:
     - cron: "0 0 * * *"
-  # Allow manual triggering of the workflow
   workflow_dispatch:
-  # Trigger the workflow on pushes to the main branch
   push:
     branches:
       - main
+
 jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout Repository
+      # 1) Check out the repository
+      - name: Checkout repository
         uses: actions/checkout@v3
-      # Step 2: Generate the snake animations
-      - name: Generate GitHub Contributions Snake Animations
-        uses: Platane/snk@v3
+
+      # 2) Generate the snake animation (using Platane's snk Action)
+      - name: Generate GitHub Contributions Snake
+        uses: Platane/snk@master
         with:
-          # GitHub username to generate the animation for
+          # If this is for your personal profile repo, use your GitHub username
           github_user_name: ${{ github.repository_owner }}
-          # Define the output files and their configurations
-          outputs: |
-            dist/github-snake.svg
-            dist/github-snake-dark.svg?palette=github-dark
-            dist/ocean.gif?color_snake=orange&color_dots=#bfd6f6,#8dbdff,#64a1f4,#4b91f1,#3c7dd9
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Step 3: Deploy the generated files to the 'output' branch
-      - name: Deploy to Output Branch
-        uses: peaceiris/actions-gh-pages@v3
+          outputs: dist/snake.svg
+          # optional: also generate a GIF
+          gif_out_path: dist/snake.gif
+          svg_out_path: dist/snake.svg
+          dark_mode: true  # generates a dark-mode version
+
+      # 3) Upload artifacts (optional—lets you download the generated files from the Action's summary)
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+      # 4) Push the generated snake animation to the `output` branch
+      - name: Push Snake Content to the output branch
+        uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: output
-          # Optionally, you can set a custom commit message
-          commit_message: "Update snake animation [skip ci]"
+          branch: output
+          force: true
+          directory: dist
+
+      # 5) Commit changes (optional if you want them also in `main`—some people only keep them in `output`)
+      - name: Commit changes
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add dist/snake.svg dist/snake.gif
+          git commit -m "chore: update snake animation"
+          git push

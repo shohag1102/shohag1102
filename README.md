@@ -93,10 +93,11 @@
   </a>
 </div>
 
+
 ###
 
 <br clear="both">
 
-<img src="https://raw.githubusercontent.com/shohag1102/shohag1102/output/snake.svg" alt="Snake animation" />
+![Snake animation](https://github.com/shohag1102/shohag1102/blob/output/snake.svg)
 
 ###
