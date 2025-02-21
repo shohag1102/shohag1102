@@ -1,56 +1,27 @@
-name: GitHub Snake Game
+name: Generate Snake Animation
 
-# Run workflow each day at midnight (UTC) + on manual triggers and push on main
 on:
   schedule:
-    - cron: "0 0 * * *"
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+    - cron: "0 0 * * *" # Runs daily at midnight UTC
+  workflow_dispatch: # Allow manual runs
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
-      # 1) Check out the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # 2) Generate the snake animation (using Platane's snk Action)
-      - name: Generate GitHub Contributions Snake
-        uses: Platane/snk@master
+      - name: Generate Snake
+        uses: Platane/snk@v3
         with:
-          # If this is for your personal profile repo, use your GitHub username
-          github_user_name: ${{ github.repository_owner }}
-          outputs: dist/snake.svg
-          # optional: also generate a GIF
-          gif_out_path: dist/snake.gif
-          svg_out_path: dist/snake.svg
-          dark_mode: true  # generates a dark-mode version
+          github_user_name: shohag1102 # Replace with your username
+          svg_path: ./output/snake.svg
 
-      # 3) Upload artifacts (optional—lets you download the generated files from the Action's summary)
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: dist
-
-      # 4) Push the generated snake animation to the `output` branch
-      - name: Push Snake Content to the output branch
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: output
-          force: true
-          directory: dist
-
-      # 5) Commit changes (optional if you want them also in `main`—some people only keep them in `output`)
-      - name: Commit changes
+      - name: Commit and push
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add dist/snake.svg dist/snake.gif
-          git commit -m "chore: update snake animation"
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+          git add ./output/snake.svg
+          git commit -m "Update snake animation"
           git push

@@ -1,6 +1,6 @@
 <h2 align="left">Hi 👋! My name is Md. Saikat Hossain Shohag and I'm a Software Engineer, from Bangladesh</h2>
 
-🛜 currently working on [webpage](https://github.com/Learnathon-By-Geeky-Solutions)<br>👨🏼‍🎓 studying computer science & engineering, <i>CUET</i><br>👨🏼‍💻 working as a web developer since 2023 
+🛜 currently working on [Learnathon](https://github.com/Learnathon-By-Geeky-Solutions)<br>👨🏼‍🎓 studying computer science & engineering, <i>CUET</i><br>👨🏼‍💻 working as a web developer since 2023 
 
 ###
 
